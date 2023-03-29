@@ -1,4 +1,4 @@
-package com.my.hr;
+package com.my.attendance;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
