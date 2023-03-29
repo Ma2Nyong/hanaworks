@@ -1,5 +1,6 @@
 package com.my.attendance.dao;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.my.attendance.dao.map.PlanMap;
 import com.my.attendance.domain.Plan;
 
-@Repository
+@Repository("planDao")
 public class PlanDaoImpl implements PlanDao {
 	@Autowired private PlanMap planMap;
 	
@@ -18,8 +19,8 @@ public class PlanDaoImpl implements PlanDao {
 	}
 	
 	@Override
-	public void insertPlan(String planTitle, String planContent) {
-		planMap.insertPlan(planTitle, planContent);
+	public void insertPlan(String planTitle, LocalDate planDate, String planContent) {
+		planMap.insertPlan(planTitle, planDate, planContent);
 	}
 	
 	@Override
@@ -28,7 +29,7 @@ public class PlanDaoImpl implements PlanDao {
 	}
 	
 	@Override
-	public void deletePlan(Plan plan) {
-		planMap.deletePlan(plan);
+	public void deletePlan(int planId) {
+		planMap.deletePlan(planId);
 	}
 }

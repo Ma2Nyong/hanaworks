@@ -78,6 +78,7 @@
                         start: arg.start,
                         end: arg.end,
                         allDay: arg.allDay,
+                        type: 'plan'
                     })
 
                     $('#modalMsg').empty()

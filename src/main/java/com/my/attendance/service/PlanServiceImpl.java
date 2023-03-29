@@ -1,7 +1,9 @@
 package com.my.attendance.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +20,8 @@ public class PlanServiceImpl implements PlanService {
 	}
 	
 	@Override
-	public void addPlan(String planTitle, String planContent) {
-		planDao.insertPlan(planTitle, planContent);
+	public void addPlan(String planTitle, LocalDate planDate, String planContent) {
+		planDao.insertPlan(planTitle, planDate, planContent);
 	}
 	
 	@Override
@@ -28,7 +30,7 @@ public class PlanServiceImpl implements PlanService {
 	}
 	
 	@Override
-	public void delPlan(Plan plan) {
-		planDao.deletePlan(plan);
+	public void delPlan(int planId) {
+		planDao.deletePlan(planId);
 	}
 }

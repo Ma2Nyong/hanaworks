@@ -1,11 +1,13 @@
 package com.my.attendance.web;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,8 +34,8 @@ public class PlanController {
 	}
 	
 	@PostMapping("add")
-	public void addPlan(String planTitle, String planContent) {
-		planService.addPlan(planTitle, planContent);
+	public void addPlan(String planTitle, LocalDate planDate, String planContent) {
+		planService.addPlan(planTitle, planDate, planContent);
 	}
 	
 	@PutMapping("fix")
@@ -41,8 +43,8 @@ public class PlanController {
 		planService.fixPlan(plan);
 	}
 	
-	@DeleteMapping("del")
-	public void delPlan(@RequestBody Plan plan) {
-		planService.delPlan(plan);
+	@DeleteMapping("del/{planId}")
+	public void delPlan(@PathVariable("planId") int planId) {
+		planService.delPlan(planId);
 	}
 }
