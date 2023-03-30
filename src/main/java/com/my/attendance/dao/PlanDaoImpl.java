@@ -29,7 +29,7 @@ public class PlanDaoImpl implements PlanDao {
 	}
 	
 	@Override
-	public void deletePlan(int planId) {
-		planMap.deletePlan(planId);
+	public void deletePlan(int planNo) {
+		planMap.deletePlan(planNo);
 	}
 }

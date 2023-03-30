@@ -3,24 +3,24 @@
 	'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
 <mapper namespace='com.my.attendance.dao.map.PlanMap'>
 	<select id='selectPlans' resultType='plan'>
-		select plan_title, plan_date , plan_content
+		select plan_no, plan_title, plan_date , plan_content
 		from plans
-		order by plan_id
+		order by plan_date
 	</select>
 	
 	<insert id='insertPlan'>
-		insert into plans (plan_id, plan_title, plan_date, plan_content) 
-		values (attendance.plan_planid_seq.nextval, #{planTitle}, #{planDate} ,#{planContent})
+		insert into plans (plan_no, plan_title, plan_date, plan_content, com_id) 
+		values (attendance.plan_planno_seq.nextval, #{planTitle}, #{planDate} ,#{planContent}, 'user1')
 	</insert>
 	
 	<update id='updatePlan'>
 		update plans
 		set plan_title = #{planTitle}, plan_date = #{planDate}, plan_content = #{planContent}
-		where plan_id = #{planId}
+		where plan_no = #{planNo}
 	</update>
 	
 	<delete id='deletePlan'>
 		delete plans
-		where plan_id = #{planId}
+		where plan_no = #{planNo}
 	</delete>
 </mapper>	

@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class Plan {
-	private int planId;
+	private int planNo;
 	private String planTitle;
 	private LocalDate planDate;
 	private String planContent;

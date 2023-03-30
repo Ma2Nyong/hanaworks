@@ -9,5 +9,5 @@ public interface PlanService {
 	List<Plan> getPlans();
 	void addPlan(String planTitle, LocalDate planDate, String planContent);
 	void fixPlan(Plan plan);
-	void delPlan(int planId);
+	void delPlan(int planNo);
 }

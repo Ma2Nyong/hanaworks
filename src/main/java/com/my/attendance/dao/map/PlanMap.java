@@ -14,5 +14,5 @@ public interface PlanMap {
 					@Param("planDate") LocalDate planDate,
 					@Param("planContent") String planContent);
 	int updatePlan(Plan plan);
-	int deletePlan(int planId);
+	int deletePlan(int planNo);
 }
