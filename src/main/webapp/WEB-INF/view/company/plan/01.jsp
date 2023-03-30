@@ -27,32 +27,27 @@
     })
 
    function listPlans(successCallback) {
-	  $.ajax({
-	    url: 'plan/get',
-	    method: 'get',
-	    dataType: 'json',
-	    success: function(response) {
-	      // response에서 이벤트 데이터를 추출하여 events 배열에 추가합니다.
-	      let events = [];
-	      for (let i = 0; i < response.length; i++) {
-	        let plan = response[i];
-	        let event = {
-	          id: plan.planNo,
-	          title: plan.planTitle,
-	          description: plan.planContent,
-	          start: plan.planDate
-	        };
-	        events.push(event);
-	      }
-	      calendar.events = events;
-	      if (successCallback) {
-	        successCallback(events);
-	      }
-	    },
-	    error: function(jqXHR, textStatus, errorThrown) {
-	      console.error(errorThrown);
-	    }
-	  });
+	    $.ajax({
+	        url: 'plan/get',
+	        method: 'get',
+	        dataType: 'json',
+	        success: function(response) {
+	            // response에서 이벤트 데이터를 추출하여 events 배열에 추가합니다.
+	            let events = [];
+	            for (let i = 0; i < response.length; i++) {
+	                let plan = response[i];
+	                let event = {
+	                    id: plan.planNo,
+	                    title: plan.planTitle,
+	                    description: plan.planContent,
+	                    start: plan.planDate
+	                };
+	                events.push(event);
+	            }
+	            calendar.events = events;
+	            successCallback(events);
+	        },
+	    });
 	}
     
     document.addEventListener('DOMContentLoaded', function() {
@@ -190,12 +185,12 @@
 				    $.ajax({
 				        url: 'plan/del/' + planNo,
 				        method: 'delete',
-				        success: function() {
-                            listPlans(function(events) {
-                                calendar.removeAllEvents();
-                                calendar.addEventSource(events);
-                            });
-                        },
+				        success: function(response) {
+			                listPlans(function(events) {
+			                	calendar.removeAllEvents();
+			                    calendar.addEventSource(events);
+			                });
+			            }
 				    });
 				    
 				    $('#modalMsg').empty()
@@ -206,7 +201,7 @@
             },
             editable: true,
             dayMaxEvents: false, // allow "more" link when too many events
-            events: function(info, successCallback, failureCallback) {
+            events: function(info, successCallback) {
                 $.ajax({
                     url: 'plan/get',
                     method: 'get',
@@ -226,9 +221,6 @@
                         }
                         successCallback(events);
                     },
-                    error: function(error) {
-                        failureCallback(error);
-                    }
                 });
             }
         });

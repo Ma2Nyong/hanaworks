@@ -46,12 +46,14 @@ public class PlanController {
 	}
 	
 	@PutMapping("fix")
-	public void fixPlan(@RequestBody Plan plan) {
-		planService.fixPlan(plan);
+	public ResponseEntity<String> fixPlan(@RequestBody Plan plan) {
+	    planService.fixPlan(plan);
+	    return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@DeleteMapping("del/{planNo}")
-	public void delPlan(@PathVariable int planNo) {
-		planService.delPlan(planNo);
+	public ResponseEntity<String> delPlan(@PathVariable int planNo) {
+	    planService.delPlan(planNo);
+	    return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
