@@ -16,7 +16,7 @@
 <script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
 <script src='../../res/common.js'></script>
 <link rel="stylesheet" href="../../res/common.css">
-<title>ADMIN.PLAN.01 일정 조회 </title>
+<title>일정 조회</title>
 <script>
     $(() => {
         input_company_header()
@@ -28,11 +28,10 @@
 
    function listPlans(successCallback) {
 	    $.ajax({
-	        url: 'plan/get',
+	        url: 'planlist/get',
 	        method: 'get',
 	        dataType: 'json',
 	        success: function(response) {
-	            // response에서 이벤트 데이터를 추출하여 events 배열에 추가합니다.
 	            let events = [];
 	            for (let i = 0; i < response.length; i++) {
 	                let plan = response[i];
@@ -50,6 +49,8 @@
 	    });
 	}
     
+    let currentEvent;
+    
     document.addEventListener('DOMContentLoaded', function() {
         const calendarEl = document.getElementById('calendar');
 
@@ -58,7 +59,7 @@
                 selectHolidays: {
                     text: '연차내역 조회',
                     click: function() {
-                        location.href='../holiday/01.html';
+                        location.href='holidaylist';
                     }
                 }
             },
@@ -74,7 +75,7 @@
             },
             
             initialView: 'dayGridMonth',
-            initialDate: '2023-03-17',
+            initialDate: '2023-03-31',
             navLinks: false,
             titleFormat : function(date) { 
                 return date.date.year +". "+(date.date.month +1); 
@@ -95,11 +96,11 @@
                 $('#addPlanBtn').click(() => {
                     const planTitle = $('#planTitle').val()
                     const planDescription = $('#planDescription').val()
-                    const planDate = moment(arg.start).format('YYYY-MM-DD'); // 날짜 형식 변환
+                    const planDate = moment(arg.start).format('YYYY-MM-DD');
 
 
                     $.ajax({
-                    	url: 'plan/add',
+                    	url: 'planlist/add',
                     	type: 'post',
                         data: {
                           planTitle: planTitle,
@@ -125,89 +126,85 @@
             },
             
             eventClick: function(arg) {
+            	currentEvent = null;
+            	currentEvent = arg.event;
                 $('#modalMsg').empty()
                 $('#modalBtn1').empty()
                 const eventId = arg.event.id
 				// holiday에서 추가한 연차와 plan에서 추가한 연차를 구분해야한다.
                 if(eventId == 'holiday') {
-                    $('#modalMsg').append(`<p>제목: ${arg.event.title} </p>`)
-                                .append(`<p>사유: ${arg.event.extendedProps.description} </p>`)
+                    $('#modalMsg').append(`<p>제목: ${currentEvent.title} </p>`)
+                                .append(`<p>사유: ${currentEvent.extendedProps.description} </p>`)
                     $('#modalBtn').hide()
                 } else {
-                    $('#modalMsg').append(`<p>제목: <input type='text' value='\${arg.event.title}' id='planTitle'/> </p>`)
-                                .append(`<p>내용: <input type='text' class='pb-5' value='\${arg.event.extendedProps.description}' id='planDescription'/> </p>`)
+                    $('#modalMsg').append(`<p>제목: <input type='text' value='\${currentEvent.title}' id='planTitle'/> </p>`)
+                                .append(`<p>내용: <input type='text' class='pb-5' value='\${currentEvent.extendedProps.description}' id='planDescription'/> </p>`)
                     $('#modalBtn').show()
                 }
-                console.log(arg.start) // undefined
                 $('#modal').modal('show')
                 $('#modalBtn1').hide()
-
+                
 				// 일정 수정.
-                $('#fixPlanBtn').click(() => {
-                	const planNo = arg.event.id
-                	const planTitle = $('#planTitle').val()
-                    const planDescription = $('#planDescription').val()
-                    const planDate = moment(arg.start).format('YYYY-MM-DD');
-                	
-                	console.log(arg.start + '') // undefined
-                	console.log(arg.event)
-                	console.log(planDate) // 오늘.
-                	
-                	let plan = {
-                			planNo: planNo,
-                			planTitle: planTitle,
-                            planDate: planDate,
-                            planContent: planDescription
-                        }
-                	
-                	$.ajax({
-                    	url: 'plan/fix',
-                    	type: 'put',
-                    	contentType: 'application/json',
-                        data: JSON.stringify(plan),
-                        success: function() {
+                 $('#fixPlanBtn').off('click').on('click', function() {
+			        const planNo = currentEvent.id;
+			        const planTitle = $('#planTitle').val();
+			        const planDescription = $('#planDescription').val();
+			        const planDate = moment(currentEvent.start).format('YYYY-MM-DD');
+			
+			        let plan = {
+			            planNo: planNo,
+			            planTitle: planTitle,
+			            planDate: planDate,
+			            planContent: planDescription
+			        };
+			
+			        $.ajax({
+			            url: 'planlist/fix',
+			            type: 'put',
+			            contentType: 'application/json',
+			            data: JSON.stringify(plan),
+			            success: function() {
+			                listPlans(function(events) {
+			                    calendar.removeAllEvents();
+			                    calendar.addEventSource(events);
+			                });
+			            },
+			        });
+			
+			        $('#modalMsg').empty();
+			        $('#modalMsg').text('일정이 수정 되었습니다.');
+			        $('#modalBtn').hide();
+			        $('#modal').modal('show');
+			    });
+
+                // 일정 삭제.
+                $('#delPlanBtn').off('click').on('click', function() {
+                    const planNo = currentEvent.id;
+                    $.ajax({
+                        url: 'planlist/del/' + planNo,
+                        method: 'delete',
+                        success: function(response) {
                             listPlans(function(events) {
                                 calendar.removeAllEvents();
                                 calendar.addEventSource(events);
                             });
-                        },
+                        }
                     });
-                	
-                    $('#modalMsg').empty()
-                    $('#modalMsg').text('일정이 수정 되었습니다.')
-                    $('#modalBtn').hide()
-                    $('#modal').modal('show')
-                })
 
-                // 일정 삭제.
-                $('#delPlanBtn').click(() => {
-				    const planNo = arg.event.id;
-				    $.ajax({
-				        url: 'plan/del/' + planNo,
-				        method: 'delete',
-				        success: function(response) {
-			                listPlans(function(events) {
-			                	calendar.removeAllEvents();
-			                    calendar.addEventSource(events);
-			                });
-			            }
-				    });
-				    
-				    $('#modalMsg').empty()
-				    $('#modalMsg').text('일정이 삭제 되었습니다.')
-				    $('#modalBtn').hide()
-				    $('#modal').modal('show')
-				})
+                    $('#modalMsg').empty();
+                    $('#modalMsg').text('일정이 삭제 되었습니다.');
+                    $('#modalBtn').hide();
+                    $('#modal').modal('show');
+                });
             },
-            editable: true,
+            editable: false,
             dayMaxEvents: false, // allow "more" link when too many events
             events: function(info, successCallback) {
                 $.ajax({
-                    url: 'plan/get',
+                    url: 'planlist/get',
                     method: 'get',
                     dataType: 'json',
                     success: function(response) {
-                        // response에서 이벤트 데이터를 추출하여 events 배열에 추가합니다.
                         let events = [];
                         for (let i = 0; i < response.length; i++) {
                             let plan = response[i];
@@ -257,7 +254,7 @@
             <div class='row'>
                 <h3><b>일정</b></h3><br>
             </div>
-            <div class='row'>
+            <div class='row pt-4'>
                 <div class='col'>
                     <div id='calendar'></div>
                 </div>

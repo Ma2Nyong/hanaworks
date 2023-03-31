@@ -18,42 +18,41 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.my.attendance.domain.Plan;
-import com.my.attendance.service.PlanService;
+import com.my.attendance.domain.Holiday;
+import com.my.attendance.service.HolidayService;
 
-@Controller("planController")
-@RequestMapping("planlist")
-public class PlanController {
-	@Autowired private PlanService planService;
+@Controller("holidayController")
+@RequestMapping("holidaylist")
+public class HolidayController {
+	@Autowired private HolidayService holidayService;
 	
 	@GetMapping
 	public ModelAndView main(ModelAndView mv) {
-		mv.setViewName("company/plan/planlist");
+		mv.setViewName("company/holiday/holidaylist");
 		return mv;
 	}
 	
 	@GetMapping("get")
 	@ResponseBody
-	public List<Plan> getPlans() {
-	    return planService.getPlans();
+	public List<Holiday> getHolidays() {
+	    return holidayService.getHolidays();
 	}
 	
 	@PostMapping("add")
-	public ResponseEntity<String> addPlan(String planTitle,
-	    @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate planDate, String planContent) {
-	    planService.addPlan(planTitle, planDate, planContent);
+	public ResponseEntity<String> addHoliday(@DateTimeFormat(pattern="yyyy-MM-dd") LocalDate holDate, String holContent) {
+		holidayService.addHoliday(holDate, holContent);
 	    return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 	
 	@PutMapping("fix")
-	public ResponseEntity<String> fixPlan(@RequestBody Plan plan) {
-	    planService.fixPlan(plan);
+	public ResponseEntity<String> fixHoliday(@RequestBody Holiday holiday) {
+		holidayService.fixHoliday(holiday);
 	    return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	@DeleteMapping("del/{planNo}")
-	public ResponseEntity<String> delPlan(@PathVariable int planNo) {
-	    planService.delPlan(planNo);
+	@DeleteMapping("del/{holNo}")
+	public ResponseEntity<String> delHoliday(@PathVariable int holNo) {
+		holidayService.delHoliday(holNo);
 	    return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

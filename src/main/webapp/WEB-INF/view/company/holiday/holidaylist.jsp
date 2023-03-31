@@ -1,5 +1,4 @@
 <%@ page language='java' contentType='text/html; charset=utf-8' pageEncoding='utf-8'%>
-<!DOCTYPE html>
 <html>
 <head>
 <meta charset='utf-8'>
@@ -8,13 +7,12 @@
 <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js'></script>
 <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"/>
-<link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.css' rel='stylesheet' />
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.js'></script>
-<script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js'></script>
-<script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/smoothness/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
 <script src='../../res/common.js'></script>
 <link rel="stylesheet" href="../../res/common.css">
-<title> ADMIN.HOLIDAY.01 연차 내역 조회 </title>
+<title> 연차 내역 조회 </title>
 <script>
     $(() => {
         input_company_header()
@@ -52,46 +50,66 @@
         })
     })
     
-    window.addEventListener('DOMContentLoaded', () => {
-      const calendar = {
-        date: new Date(),
-    
-        init() {
-          this.renderCalendar();
-          this.bindEvents();
-        },
-    
-        renderCalendar() {
-          const yearMonthElem = document.querySelector('#yearMonth');
-          yearMonthElem.textContent = `${this.date.getFullYear()}. ${this.date.getMonth() + 1}`;
-        },
-    
-        bindEvents() {
-          const prevBtn = document.querySelector('#prevBtn');
-          const nextBtn = document.querySelector('#nextBtn');
-    
-          prevBtn.addEventListener('click', () => {
-            this.date.setMonth(this.date.getMonth() - 1);
-            this.renderCalendar();
-          });
-    
-          nextBtn.addEventListener('click', () => {
-            this.date.setMonth(this.date.getMonth() + 1);
-            this.renderCalendar();
-          });
-        },
-      };
-    
-      calendar.init();
+    $(function() {
+        let today = new Date();
+        let dateString = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+
+        $("#datepicker").datepicker({
+            changeMonth: true, 
+            changeYear: true,
+            minDate: '-50y',
+            nextText: '다음 달',
+            prevText: '이전 달',
+            yearRange: 'c-50:c+20',
+            showButtonPanel: true, 
+            currentText: '오늘 날짜',
+            closeText: '닫기',
+            dateFormat: "yyyy-mm",
+            showAnim: "slide",
+            showMonthAfterYear: true, 
+            dayNamesMin: ['', '화', '수', '목', '금', '토', '일'],
+            monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+
+            onSelect: function(date) {
+                today = new Date(date);
+                dateString = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+                $("#toDay").text(dateString);
+            }
+        });
+
+        function displayToday() {
+            let year = today.getFullYear();
+            let month = today.getMonth() + 1;
+            let dateString = year + "." + month;
+            $("#toDay").prepend(dateString);
+        }
+
+        displayToday();
+
+        $("#prevDay").click(function() {
+            today.setMonth(today.getMonth() - 1);
+            let year = today.getFullYear();
+            let month = today.getMonth();
+            yearMonthString = year + "." + ("" + month).slice(-2);
+            $("#toDay").text(yearMonthString);
+        });
+
+        $("#nextDay").click(function() {
+            today.setMonth(today.getMonth() + 1);
+            let year = today.getFullYear();
+            let month = today.getMonth();
+            yearMonthString = year + "." + ("" + month).slice(-2);
+            $("#toDay").text(yearMonthString);
+        });
     });
 </script>
 <style>
-    #prevBtn, #nextBtn, #planBtn {
+    #prevDay, #nextDay, #planBtn {
         color: white;
         background-color: darkslateblue;
     }
 
-    #prevBtn, #nextBtn {
+    #prevDay, #nextDay {
         flex: 0 0 auto;
         width: 30%;
     }
@@ -104,7 +122,7 @@
         padding-left: 1rem;
     }
 
-    #yearMonth {
+    #toDay {
         display: inline-block;
         font-size: 1.75em;
         margin: 0;
@@ -134,18 +152,19 @@
                 <div class='col'>
                     <div class='row'>
                         <div class='btn-group col' id='prevNextBtn'>
-                            <button type='button' class="btn" id='prevBtn'>
-                                <i class="fa-solid fa-chevron-left"></i>
-                            </button>
-                            <button type='button' class="btn" id='nextBtn'>
-                                <i class="fa-solid fa-chevron-right"></i>
-                            </button>
+                            <button type='button' class="btn" id='prevDay'>
+		                        <i class="fa-solid fa-chevron-left"></i>
+		                    </button>
+		                    <button type='button' class="btn me-5" id='nextDay'>
+		                        <i class="fa-solid fa-chevron-right"></i>
+		                    </button>
+                 			
                         </div>
                         <div class='col'>
-                            <div class="year-month" id='yearMonth'></div>
+                            <div class='ps-4' id='toDay'></div>
                         </div>
                         <div class='col d-md-flex justify-content-md-end'>
-                            <button type='button' class='btn' id='planBtn' onclick="window.location.href='../plan/01.html'">사내일정 조회</button>
+                            <button type='button' class='btn' id='planBtn' onclick="window.location.href='planlist'">사내일정 조회</button>
                         </div>
                     </div>
                 </div>
