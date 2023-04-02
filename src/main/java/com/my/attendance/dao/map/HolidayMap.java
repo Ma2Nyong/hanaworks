@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import com.my.attendance.domain.Holiday;
 
 public interface HolidayMap {
-	List<Holiday> selectHoliday();
+	List<Holiday> selectHolidays();
 	int insertHoliday(@Param("holDate") LocalDate holDate,
 						@Param("holContent") String holContent);
 	int updateHoliday(Holiday holiday);

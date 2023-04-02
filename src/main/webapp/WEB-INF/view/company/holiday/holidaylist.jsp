@@ -20,6 +20,7 @@
         btn_click()
         input_footer()
         show_logout()
+        listHolidays()
 
         $('.fixHolidayBtn').click(() => {
             $('#modalMsg').empty()
@@ -55,25 +56,10 @@
         let dateString = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
 
         $("#datepicker").datepicker({
-            changeMonth: true, 
-            changeYear: true,
-            minDate: '-50y',
-            nextText: '다음 달',
-            prevText: '이전 달',
-            yearRange: 'c-50:c+20',
-            showButtonPanel: true, 
-            currentText: '오늘 날짜',
-            closeText: '닫기',
-            dateFormat: "yyyy-mm",
-            showAnim: "slide",
-            showMonthAfterYear: true, 
-            dayNamesMin: ['', '화', '수', '목', '금', '토', '일'],
-            monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
-
             onSelect: function(date) {
                 today = new Date(date);
                 dateString = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-                $("#toDay").text(dateString);
+                $("#yearMonth").text(dateString);
             }
         });
 
@@ -81,35 +67,63 @@
             let year = today.getFullYear();
             let month = today.getMonth() + 1;
             let dateString = year + "." + month;
-            $("#toDay").prepend(dateString);
+            $("#yearMonth").prepend(dateString);
         }
 
         displayToday();
 
-        $("#prevDay").click(function() {
+        $("#prevBtn").click(function() {
             today.setMonth(today.getMonth() - 1);
             let year = today.getFullYear();
-            let month = today.getMonth();
+            let month = today.getMonth() + 1;
             yearMonthString = year + "." + ("" + month).slice(-2);
-            $("#toDay").text(yearMonthString);
+            $("#yearMonth").text(yearMonthString);
         });
 
-        $("#nextDay").click(function() {
+        $("#nextBtn").click(function() {
             today.setMonth(today.getMonth() + 1);
             let year = today.getFullYear();
-            let month = today.getMonth();
+            let month = today.getMonth() + 1;
             yearMonthString = year + "." + ("" + month).slice(-2);
-            $("#toDay").text(yearMonthString);
+            $("#yearMonth").text(yearMonthString);
         });
     });
+    
+    function listHolidays() {
+        $('#holidaylist').empty()
+        
+        $.ajax({
+    		url: 'holidaylist/get',
+    		dataType: 'json',
+    		success: holidaylist => {
+		        if(holidaylist.length) {
+		            const holidayArr = []
+		            
+		            $.each(holidaylist, (i, holiday) => {
+		            	holidayArr.unshift(
+		                    `<tr>
+		                        <td>\${holiday.employeeName}</td>
+		                        <td>\${holiday.holDate}</td>
+		                        <td><button type='button' class='btn btn-white btn-sm fixHolidayBtn'>수정</button>
+                                <button type='button' class='btn btn-red btn-sm delHolidayBtn'>삭제</button></td>
+		                    </tr>`
+		                )
+		            })
+		    
+		            $('#holidaylist').append(holidayArr.join(''))
+		        } else $('#holidaylist').append(
+		            '<tr><td colspan=4 class=text-center>연차내역이 없습니다.</td></tr>')
+    		}
+        })
+    }
 </script>
 <style>
-    #prevDay, #nextDay, #planBtn {
+    #prevBtn, #nextBtn, #planBtn {
         color: white;
         background-color: darkslateblue;
     }
 
-    #prevDay, #nextDay {
+    #prevBtn, #nextBtn {
         flex: 0 0 auto;
         width: 30%;
     }
@@ -122,7 +136,7 @@
         padding-left: 1rem;
     }
 
-    #toDay {
+    #yearMonth {
         display: inline-block;
         font-size: 1.75em;
         margin: 0;
@@ -152,16 +166,16 @@
                 <div class='col'>
                     <div class='row'>
                         <div class='btn-group col' id='prevNextBtn'>
-                            <button type='button' class="btn" id='prevDay'>
+                            <button type='button' class="btn" id='prevBtn'>
 		                        <i class="fa-solid fa-chevron-left"></i>
 		                    </button>
-		                    <button type='button' class="btn me-5" id='nextDay'>
+		                    <button type='button' class="btn me-5" id='nextBtn'>
 		                        <i class="fa-solid fa-chevron-right"></i>
 		                    </button>
                  			
                         </div>
                         <div class='col'>
-                            <div class='ps-4' id='toDay'></div>
+                            <div class='ps-4' id='yearMonth'></div>
                         </div>
                         <div class='col d-md-flex justify-content-md-end'>
                             <button type='button' class='btn' id='planBtn' onclick="window.location.href='planlist'">사내일정 조회</button>
@@ -179,43 +193,7 @@
                                 <th>수정 / 삭제</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>송하나</td>
-                                <td>2023-03-31</td>
-                                <td><button type='button' class='btn btn-white btn-sm fixHolidayBtn'>수정</button>
-                                    <button type='button' class='btn btn-red btn-sm delHolidayBtn'>삭제</button></td>
-                            </tr>
-                            <tr>
-                                <td>김민형</td>
-                                <td>2023-03-27</td>
-                                <td><button type='button' class='btn btn-white btn-sm fixHolidayBtn'>수정</button>
-                                    <button type='button' class='btn btn-red btn-sm delHolidayBtn'>삭제</button></td>
-                            </tr>
-                            <tr>
-                                <td>최서영</td>
-                                <td>2023-03-20</td>
-                                <td><button type='button' class='btn btn-white btn-sm fixHolidayBtn'>수정</button>
-                                    <button type='button' class='btn btn-red btn-sm delHolidayBtn'>삭제</button></td>
-                            </tr>
-                            <tr>
-                                <td>오진성</td>
-                                <td>2023-03-16</td>
-                                <td><button type='button' class='btn btn-white btn-sm fade fixHolidayBtn'>수정</button>
-                                    <button type='button' class='btn btn-red btn-sm fade delHolidayBtn'>삭제</button></td>
-                            </tr>
-                            <tr>
-                                <td>오진성</td>
-                                <td>2023-03-14</td>
-                                <td><button type='button' class='btn btn-white btn-sm fade fixHolidayBtn'>수정</button>
-                                    <button type='button' class='btn btn-red btn-sm fade delHolidayBtn'>삭제</button></td>
-                            </tr>
-                            <tr>
-                                <td>이선재</td>
-                                <td>2023-03-10</td>
-                                <td><button type='button' class='btn btn-white btn-sm fade fixHolidayBtn'>수정</button>
-                                    <button type='button' class='btn btn-red btn-sm fade delHolidayBtn'>삭제</button></td>
-                            </tr>
+                        <tbody id='holidayList'>
                         </tbody>
                         <caption class="text-end">*연차 사용일로부터 3일 전까지 수정, 취소가 가능합니다.</caption>
                     </table>
