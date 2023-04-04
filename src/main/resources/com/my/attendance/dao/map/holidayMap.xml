@@ -3,26 +3,27 @@
 	'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
 <mapper namespace='com.my.attendance.dao.map.HolidayMap'>
 	<select id='selectHolidays' resultType='holiday'>
-		select e.emp_name, h.hol_date
+		select e.emp_name, h.hol_no, h.hol_date
 		from attendance.employees e
 		join attendance.holidays h
 		on e.emp_no = h.emp_no
-		where e.emp_no = 1
+		where to_char(h.hol_date, 'YYYY-MM') = #{yearMonth}
+		order by h.hol_date
 	</select>
 	
 	<insert id='insertHoliday'>
 		insert into holidays (hol_no, hol_date, hol_content, emp_no) 
-		values (attendance.holiday_holidayno_seq.nextval, #{holidayDate} ,#{holidayContent}, 1)
+		values (attendance.holiday_holidayno_seq.nextval, #{holDate} ,#{holContent}, 1)
 	</insert>
 	
 	<update id='updateHoliday'>
 		update holidays
-		set hol_date = #{holidayDate}, hol_content = #{holidayContent}
-		where hol_no = #{holidayNo}
+		set hol_date = #{holDate}
+		where hol_no = #{holNo}
 	</update>
 	
 	<delete id='deleteHoliday'>
 		delete holidays
-		where hol_no = #{holidayNo}
+		where hol_no = #{holNo}
 	</delete>
 </mapper>	

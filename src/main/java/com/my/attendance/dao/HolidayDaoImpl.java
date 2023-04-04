@@ -1,8 +1,10 @@
 package com.my.attendance.dao;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -14,8 +16,8 @@ public class HolidayDaoImpl implements HolidayDao {
 	@Autowired private HolidayMap holidayMap;
 	
 	@Override
-	public List<Holiday> selectHolidays() {
-		return holidayMap.selectHolidays();
+	public List<Holiday> selectHolidays(YearMonth yearMonth) {
+		return holidayMap.selectHolidays(yearMonth);
 	}
 	
 	@Override

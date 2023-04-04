@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Component;
 
 import com.my.attendance.domain.Plan;
 

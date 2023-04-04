@@ -1,6 +1,7 @@
 package com.my.attendance.service;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,8 @@ public class HolidayServiceImpl implements HolidayService {
 	@Autowired private HolidayDao holidayDao;
 	
 	@Override
-	public List<Holiday> getHolidays() {
-		return holidayDao.selectHolidays();
+	public List<Holiday> getHolidays(YearMonth yearMonth) {
+		return holidayDao.selectHolidays(yearMonth);
 	}
 	
 	@Override

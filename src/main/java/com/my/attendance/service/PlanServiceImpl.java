@@ -3,7 +3,6 @@ package com.my.attendance.service;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
