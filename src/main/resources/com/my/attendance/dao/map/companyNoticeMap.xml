@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 
+	'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.my.attendance.dao.map.CompanyNoticeMap'>
+	<select id='selectCompanyNoticeList' resultType='companyNotice'>
+		select *
+		from attendance.company_notices
+		where company_id = #{companyId}
+		order by company_notice_no
+	</select> 
+	
+	<select id='selectCompanyNotice' resultType='companyNotice'>
+		select *
+		from attendance.company_notices
+		where company_notice_no = #{companyNoticeNo}	
+	</select>
+	
+	<insert id='insertCompanyNotice'>
+		insert into company_notices (company_notice_no, comntc_title, comntc_content, comntc_date, company_id)
+		values (attendance.comntc_comntcno_seq.nextval, #{companyNoticeTitle} , #{companyNoticeContent}, sysdate, #{companyId})
+	</insert>
+	
+	<update id='updateCompanyNotice'>
+		update company_notices
+		set comntc_title = #{comntcTitle}, comntc_content = #{comntcContent}
+		where company_notice_no = #{companyNoticeNo}
+	</update>
+	
+	<delete id='deleteCompanyNotice'>
+		delete company_notices
+		where company_notice_no = #{companyNoticeNo}
+	</delete>
+</mapper>

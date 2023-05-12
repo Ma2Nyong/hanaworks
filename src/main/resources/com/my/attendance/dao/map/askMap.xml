@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 
+	'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.my.attendance.dao.map.AskMap'>
+	<select id='selectAsks' resultType='ask'>
+		select *
+		from attendance.asks
+		order by ask_no
+	</select>
+
+	<select id='selectAsk' resultType='ask'>
+		select *
+		from attendance.asks
+		where ask_no = #{askNo} 
+	</select>
+	
+	<insert id='insertAsk'>
+		insert into asks (ask_no, ask_title, ask_name, ask_content, answer_content, ask_date, answer_date) 
+		values (attendance.ask_askno_seq.nextval, #{askTitle}, #{askName}, #{askContent}, null, sysdate, null)
+	</insert>
+	
+	<update id='insertAnswer'>
+		update asks
+		set answer_date = sysdate, answer_content = #{answerContent}
+		where ask_no = #{askNo}
+	</update>
+	
+	<delete id='deleteAsk'>
+		delete asks
+		where ask_no = #{askNo}
+	</delete>
+</mapper>	

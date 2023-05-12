@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org/DTD Mapper 3.0//EN'
+	'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.my.attendance.dao.map.EmployeeMap'>
+	<select id='selectEmployee' resultType='employee'>
+		select *
+		from employees
+		where emp_id = '${employeeId}'
+		and emp_pw = '${employeePw}'
+	</select>
+	
+	<select id='selectEmployeeId' resultType='String'>
+		select emp_id
+		from employees
+		where emp_name = '${employeeName}'
+		and emp_ph = '${employeePh}'
+	</select>
+	
+	<select id='selectEmployeePw' resultType='String'>
+		select emp_pw
+		from employees
+		where emp_id = '${employeeId}'
+		and emp_pino = '${employeePino}'
+	</select>
+	
+	<select id='checkEmployeePw' resultType='Int'>
+		select count(*)
+		from attendance.employees
+		where employee_no = #{employeeNo}
+		and emp_pw = #{employeePw}
+	</select>
+	
+	<update id='updateEmployeePw'>
+		update attendance.employees
+		set emp_pw = #{employeePw}
+		where employee_no = #{employeeNo}
+	</update>
+	
+	<select id='selectEmployees' resultType='employee'>
+		select *
+		from employees
+		where company_id = #{companyId}
+	</select>
+	
+	<delete id='deleteEmployee'>
+		delete employees
+		where employee_no = #{employeeNo}
+	</delete>
+	
+	<select id='selectEmployeeInfo' resultType='employee'>
+		select *
+		from employees
+		where employee_no = #{employeeNo}
+	</select>
+	
+	
+	<insert id='insertEmployee'>
+		insert into attendance.employees
+		values(attendance.emp_empno_seq.nextval, #{empId}, #{empPw}, #{empName}, #{empAddr},
+		#{empDetailAddr}, #{empPostcode}, #{empPh}, #{empEmail}, #{hireDate},
+		#{empPosition}, #{empPino}, #{profileName}, #{companyId})
+	</insert>
+	
+	<select id='checkEmployee' resultType='Int'>
+		select count(*)
+		from employees
+		where emp_id = #{empId}
+	</select>
+	
+	<update id='updateEmployee'>
+	    update attendance.employees
+	    set emp_id = #{empId},
+	        emp_pw = #{empPw},
+	        emp_name = #{empName},
+	        emp_addr = #{empAddr},
+	        emp_detailaddr = #{empDetailAddr},
+	        emp_postcode = #{empPostcode},
+	        emp_ph = #{empPh},
+	        emp_email = #{empEmail},
+	        hire_date = #{hireDate},
+	        emp_position = #{empPosition},
+	        emp_pino = #{empPino},
+	        profile_name = #{profileName},
+	        company_id = #{companyId}
+	    	where emp_id = #{empId}
+	</update>	
+	
+	<select id='choiceEmployee' resultType='employee'>
+		select *
+		from employees
+		where employee_no = #{employeeNo}
+	</select>
+</mapper>

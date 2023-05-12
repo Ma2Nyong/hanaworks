@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org/DTD Mapper 3.0//EN'
+	'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.my.attendance.dao.map.WorkMap'>
+	<insert id='insertStartTime' >
+		insert into works(work_no, start_time, employee_no)
+		values(attendance.work_workno_seq.nextval, sysdate, ${employeeNo})
+	</insert>
+	<select id='selectInsertStart' resultType='WorkDto'>
+		select * 
+		from works 
+		where work_no = (select max(work_no) 
+		from works where employee_no = ${employeeNo})
+	</select>
+	<update id='updateEndTime'>
+		update works
+		set end_time = sysdate
+		where work_no = ${workNo}
+	</update>
+	<select id='selectInsertEnd' resultType='Work'>
+		select end_time
+		from works
+		where work_no = ${workNo}
+	</select>
+	
+	<select id='selectChoiceDay' resultType='Work'>
+	    select e.emp_name, e.emp_position, w.start_time, w.end_time
+	    from works w
+	    join employees e
+	    on e.employee_no = w.employee_no
+	    where to_char(w.start_time, 'YYYY-MM-DD') = #{choiceDay}
+	    and e.company_id = #{companyId}
+	</select>
+	
+	<select id='selectworkHoliday' resultType='Work'>
+	    select e.emp_name, e.emp_position, h.hol_date
+		from employees e
+		join holidays h
+		on e.employee_no = h.employee_no
+		where to_char(h.hol_date, 'YYYY-MM-DD') = #{choiceDay}
+		and e.company_id = #{companyId}
+	</select>
+	
+	<select id='selectWorkHolidays' resultType='Work'>
+		select start_time, end_time, work_no
+		from attendance.works
+		where to_char(start_time, 'YYYY-MM') = #{yearMonth}
+		and employee_no = #{employeeNo}
+		union all
+		select hol_date, null, null
+		from attendance.holidays
+		where to_char(hol_date, 'YYYY-MM') = #{yearMonth}
+		and employee_no = #{employeeNo}
+		order by start_time 
+	</select>
+</mapper>

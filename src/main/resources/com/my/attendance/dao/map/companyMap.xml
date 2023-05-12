@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org/DTD Mapper 3.0//EN'
+	'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.my.attendance.dao.map.CompanyMap'>
+	<select id='selectCompany' resultType='company'>
+		select *
+		from companys
+		where company_id = '${companyId}'
+		and com_pw = '${companyPw}'
+	</select>
+	
+	<select id='selectCompanyId' resultType='String'>
+		select company_id
+		from companys
+		where com_name = '${companyName}'
+		and com_regno = ${companyRegno}
+	</select>
+	
+	<select id='selectCompanyPw' resultType='String'>
+		select com_pw
+		from companys
+		where company_id = '${companyId}'
+		and com_email = '${companyEmail}'
+	</select>
+	
+	<insert id="insertCompany">
+        insert into  attendance.companys    
+        values (#{companyId}, #{comPw}, #{comName},
+        #{comRegno},#{comAddr},#{comDetailAddr},#{comPostcode},#{comPh},
+        #{comEmail},#{president})
+    </insert>
+    
+    <select id='checkCompany' resultType='int'>
+	  	select count(*)
+	  	from companys
+	  	where company_id = #{companyId}
+	</select>
+	
+	<update id="updateCompany">
+		  update attendance.companys
+		  set com_pw = #{comPw},
+		      com_name = #{comName},
+		      com_regno = #{comRegno},
+		      com_addr = #{comAddr},
+		      com_detailaddr = #{comDetailAddr},
+		      com_postcode = #{comPostcode},
+		      com_ph = #{comPh},
+		      com_email = #{comEmail},
+		      president = #{president}
+		  where company_Id = #{companyId}
+	</update>
+	
+	<delete id='deleteCompany'>
+		delete companys
+		where company_id = #{companyId}
+	</delete>
+	
+	<select id='selectCompanys' resultType='company'>
+		select *
+		from companys
+	</select>
+		
+	<select id='choiceCompany' resultType='company'>
+	  	select *
+	  	from companys
+	  	where company_id = #{companyId}
+	</select>
+</mapper>
